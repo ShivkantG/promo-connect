@@ -28,6 +28,14 @@ Route::prefix('v1')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
+    Route::get('/test-broadcast', function () {
+        broadcast(new \App\Events\MessageSent((object)[
+            'conversation_id' => 1,
+            'message' => 'Hello test'
+        ]));
+
+        return 'Broadcast sent';
+    });
 
     Route::prefix('v1')->group(function () {
 
@@ -68,6 +76,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::put('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
         });
 
+        Route::post('/chat/conversation', [ChatController::class, 'getOrCreateConversation']);
         Route::post('/chat/send', [ChatController::class, 'sendMessage']);
         Route::get('/chat/{conversationId}', [ChatController::class, 'getMessages']);
     });
